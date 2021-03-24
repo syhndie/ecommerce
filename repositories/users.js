@@ -34,7 +34,17 @@ class UsersRepository {
     async create(attrs) {
         const records = await this.getAll();
         records.push(attrs);
-        await fs.promises.writeFile(this.filename, JSON.stringify(records));
+
+        await this.writeAll(records);
+    }
+
+    
+    async writeAll(records) {
+        await fs.promises.writeFile(
+            this.filename, 
+            //the third argument to json.stringify designates the level of indentation to use
+            JSON.stringify(records, null, 2)
+        );
     }
 }
 const test = async () => {
