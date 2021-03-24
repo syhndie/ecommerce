@@ -1,6 +1,6 @@
 //fs is library that inteacts with the file system
 const fs = require('fs');
-const { REPL_MODE_SLOPPY } = require('repl');
+const crypto =  require('crypto');
 
 class UsersRepository {
     constructor(filename) {
@@ -32,12 +32,12 @@ class UsersRepository {
     }
 
     async create(attrs) {
+        attrs.id = this.randomId();
         const records = await this.getAll();
         records.push(attrs);
 
         await this.writeAll(records);
     }
-
     
     async writeAll(records) {
         await fs.promises.writeFile(
@@ -45,6 +45,10 @@ class UsersRepository {
             //the third argument to json.stringify designates the level of indentation to use
             JSON.stringify(records, null, 2)
         );
+    }
+
+    randomId() {
+        return crypto.randomBytes(4).toString('hex');
     }
 }
 const test = async () => {
