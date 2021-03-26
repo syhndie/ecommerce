@@ -96,12 +96,6 @@ class UsersRepository {
     }
 }
 
-const test = async () => {
-    const repo = new UsersRepository('users.json');
-
-    const user = await repo.getOneBy({ email: 'tester@test.com'});
-
-    console.log(user);
-};
-
-test();
+//export an instance of the user repository because you only 
+//ever want one and this ensures that is the case
+module.exports = new UsersRepository('users.json');
