@@ -3,6 +3,7 @@
 const express = require('express');
 const cookieSession =require('cookie-session');
 const usersRepo = require('./repositories/users');
+const { comparePasswords } = require('./repositories/users');
 
 
 //app is an object that describes all the things our web server can do
@@ -83,7 +84,11 @@ app.post('/signin', async (req, res) => {
         return res.send('Email not found');
     }
 
-    if (user.password !== password) {
+    const isValidPassword = await comparePasswords(
+        user.password, 
+        password
+    );
+    if (!isValidPassword) {
         return res.send('Invalid password');
     }
 
