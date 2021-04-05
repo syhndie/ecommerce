@@ -57,6 +57,7 @@ class UsersRepository {
     //saved === password saved in users.json
     //supplied === password user typed in
     async comparePasswords(saved, supplied) {
+        debugger;
         //take saved password, and split it into the salted & hashed
         //password, and the salt that was used
         const[hashed, salt] = saved.split('.');
