@@ -1,13 +1,15 @@
 //Set up web server
 //express is a library to assist in setting up a full-featured server
 const express = require('express');
-const cookieSession =require('cookie-session');
+const cookieSession = require('cookie-session');
 const { comparePasswords } = require('./repositories/users');
 const authRouter = require('./routes/admin/auth');
 
 
 //app is an object that describes all the things our web server can do
 const app = express();
+//this tells express to make our static files in the folder public available to the server
+app.use(express.static('public'));
 //this tells express to apply bodyparser middleware to all route handlers
 app.use(express.urlencoded({ extended: true }));
 //assign encryption key to cookieSession
