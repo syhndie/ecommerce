@@ -4,6 +4,7 @@ const express = require('express');
 const cookieSession = require('cookie-session');
 const { comparePasswords } = require('./repositories/users');
 const authRouter = require('./routes/admin/auth');
+const productsRouter = require('./routes/admin/products');
 
 
 //app is an object that describes all the things our web server can do
@@ -20,6 +21,7 @@ app.use(cookieSession({
     })
 );
 app.use(authRouter);
+app.use(productsRouter);
 
 //add port listener
 app.listen(3000, () => {
