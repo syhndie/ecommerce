@@ -51,14 +51,14 @@ module.exports = {
         .custom(async (password, { req }) => {
             const user = await usersRepo.getOneBy({ email: req.body.email });
             if (!user) {
-                throw new Error('Invalid password');
+                throw new Error('Username or Password is incorrect');
             }
             const validPassword = await usersRepo.comparePasswords(
                 user.password,
                 password
             );
             if (!validPassword) {
-                throw new Error('Invalid password');
+                throw new Error('Username or Password is incorrect');
             } else return true;
         })
 

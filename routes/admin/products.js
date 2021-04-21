@@ -1,9 +1,10 @@
 const express = require('express');
-const { validationResult } = require('express-validator');
+
 //multer is middleware used to handle multi-part form data
 //we need this to allow the user to upload an image
 const multer = require('multer');
 
+const { handleErrors } = require('./middlewares');
 const productsRepo = require('../../repositories/products');
 const productsNewTemplate = require('../../views/admin/products/new');
 const { requireTitle, requirePrice } = require('./validators');
@@ -37,17 +38,17 @@ router.post(
     //because there is not req.bod until this has happened
     upload.single('image'),
     [requireTitle, requirePrice], 
+    handleErrors(productsNewTemplate),
     async (req, res) => {
-        const errors = validationResult(req);
-
-        if (!errors.isEmpty()) {
-            return res.send(productsNewTemplate({ errors }));
-        }
-
         //multer stored the image in req.file.buffer
         //we store it in products.json as a base64 string
-        const image = req.file.buffer.toString('base64');
-
+        let image;
+        try {
+            image = req.file.buffer.toString('base64');
+        } catch {
+            image='';
+        }
+    
         const { title, price } = req.body;
         await productsRepo.create({ title, price, image });
 
