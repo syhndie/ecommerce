@@ -34,7 +34,7 @@ router.post(
 
         //define userId property in the user's cookie
         req.session.userId = user.id;
-        res.send('account created');
+        res.redirect('/admin/products');
     }
 );
 
@@ -62,7 +62,7 @@ router.post(
 
         req.session.userId = user.id;
 
-        res.send(`${user.email} is signed in.`);
+        res.redirect('/admin/products');
     }
 );
 
