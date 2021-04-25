@@ -4,7 +4,7 @@ const express = require('express');
 //we need this to allow the user to upload an image
 const multer = require('multer');
 
-const { handleErrors } = require('./middlewares');
+const { handleErrors, requireAuth } = require('./middlewares');
 const productsRepo = require('../../repositories/products');
 const productsNewTemplate = require('../../views/admin/products/new');
 const productsIndexTemplate = require('../../views/admin/products/index');
@@ -20,14 +20,14 @@ const upload = multer({ storage: multer.memoryStorage() });
 
 //1
 //get product listsing
-router.get('/admin/products', async (req, res) => {
+router.get('/admin/products', requireAuth, async (req, res) => {    
     const products = await productsRepo.getAll();
     res.send(productsIndexTemplate({ products }));
 });
 
 //2
 //get new product form
-router.get('/admin/products/new', (req, res) => {
+router.get('/admin/products/new', requireAuth, (req, res) => {    
     res.send(productsNewTemplate({  }));
 });
 
@@ -35,13 +35,14 @@ router.get('/admin/products/new', (req, res) => {
 //post new product form
 router.post(
     '/admin/products/new', 
+    requireAuth,
     //the upload accepts a single file called image
     //this must come before the validation step
     //because there is not req.bod until this has happened
     upload.single('image'),
     [requireTitle, requirePrice], 
     handleErrors(productsNewTemplate),
-    async (req, res) => {
+    async (req, res) => {        
         //multer stored the image in req.file.buffer
         //we store it in products.json as a base64 string
         let image;
