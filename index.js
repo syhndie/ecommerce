@@ -4,8 +4,8 @@ const express = require('express');
 const cookieSession = require('cookie-session');
 const { comparePasswords } = require('./repositories/users');
 const authRouter = require('./routes/admin/auth');
-const productsRouter = require('./routes/admin/products');
-
+const adminProductsRouter = require('./routes/admin/products');
+const productsRouter = require('./routes/products');
 
 //app is an object that describes all the things our web server can do
 const app = express();
@@ -21,6 +21,7 @@ app.use(cookieSession({
     })
 );
 app.use(authRouter);
+app.use(adminProductsRouter);
 app.use(productsRouter);
 
 //add port listener
