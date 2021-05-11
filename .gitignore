@@ -1,4 +1,5 @@
 node_modules
 users.json
 products.json
+carts.json
 notes.txt
