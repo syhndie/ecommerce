@@ -1,5 +1,7 @@
 const express = require('express');
 const cartsRepo = require('../repositories/carts');
+const productsRepo = require('../repositories/products');
+const cartShowTemplate = require('../views/carts/show');
 
 const router = express.Router();
 
@@ -32,12 +34,30 @@ router.post('/cart/products', async (req, res) => {
     }
 
     await cartsRepo.update(cart.id, { items: cart.items });
-
+    console.log(cart.items);
     res.send('product in cart');
 });
 
 //2
 //get shopping cart
+router.get('/cart', async (req, res) => {
+    if (!req.session.cartId) {
+        return res.redirect('/');
+    }
+    const cart = await cartsRepo.getOne(req.session.cartId);
+
+    for (let item of cart.items) {
+        //an item is an abject with an id and quantity
+        //use the item id to pull the actual product from the repo
+        const product = await productsRepo.getOne(item.id);
+
+        //add the product to the item object
+        //this change won't be saved to the repo         
+        item.product = product;
+    }
+
+    res.send(cartShowTemplate({ items: cart.items }));
+});
 
 //3
 //post delete item from cart
