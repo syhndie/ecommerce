@@ -34,7 +34,6 @@ router.post('/cart/products', async (req, res) => {
     }
 
     await cartsRepo.update(cart.id, { items: cart.items });
-    console.log(cart.items);
     res.send('product in cart');
 });
 
@@ -61,5 +60,16 @@ router.get('/cart', async (req, res) => {
 
 //3
 //post delete item from cart
+router.post('/cart/products/delete', async (req, res) => {
+    const cart = await cartsRepo.getOne(req.session.cartId);
+    const { itemId } = req.body;
+    
+    //filter cart items - keep only those that do not have itemId
+    const items = cart.items.filter(item => item.id !== itemId);
+
+    await cartsRepo.update(req.session.cartId, { items });
+
+    res.redirect('/cart');
+});
 
 module.exports = router;
